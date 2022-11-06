@@ -1,10 +1,11 @@
-package com.mijan.dev.githubprofile
+package com.mijan.dev.githubprofile.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.mijan.dev.githubprofile.R
 import com.mijan.dev.githubprofile.data.local.entity.UserEntity
 import com.mijan.dev.githubprofile.databinding.LayoutUserItemBinding
 import com.mijan.dev.githubprofile.utils.loadImageUrl
