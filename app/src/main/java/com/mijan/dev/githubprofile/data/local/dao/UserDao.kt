@@ -1,5 +1,6 @@
 package com.mijan.dev.githubprofile.data.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -15,4 +16,6 @@ interface UserDao {
     @Query("SELECT * FROM users")
     fun getUsers(): Flow<List<UserEntity>>
 
+    @Query("SELECT * FROM users")
+    fun getUsersPagingSource(): PagingSource<Int, UserEntity>
 }
