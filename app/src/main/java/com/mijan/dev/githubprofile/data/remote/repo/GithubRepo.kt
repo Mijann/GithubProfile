@@ -25,8 +25,8 @@ class GithubRepo @Inject constructor(
 ) {
     @ExperimentalPagingApi
     fun getUsersPagingDataFlow(pageSize: Int) = Pager(
-        config = PagingConfig(pageSize),
-        remoteMediator = UsersRemoteMediator(database = database, userDao, githubApi)
+        config = PagingConfig(pageSize, enablePlaceholders = false, initialLoadSize = pageSize),
+        remoteMediator = UsersRemoteMediator(database = database, userDao, githubApi),
     ) {
         userDao.getUsersPagingSource()
     }.flow

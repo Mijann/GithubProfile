@@ -36,13 +36,17 @@ class UsersRemoteMediator(
                         )
                     lastItem.id
                 }
-                else -> 0
+                else -> return MediatorResult.Success(
+                    endOfPaginationReached = true
+                )
             }
 
             val response = networkService.getUsers(loadKey)
 
-            database.withTransaction {
-                userDao.addUsers(response.map { it.toUserEntity() })
+            if (response.isNotEmpty()) {
+                database.withTransaction {
+                    userDao.addOrUpdateUsers(response.map { it.toUserEntity() })
+                }
             }
 
             MediatorResult.Success(response.isEmpty())
