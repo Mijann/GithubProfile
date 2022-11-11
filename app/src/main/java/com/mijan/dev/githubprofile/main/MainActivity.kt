@@ -1,4 +1,4 @@
-package com.mijan.dev.githubprofile
+package com.mijan.dev.githubprofile.main
 
 import android.os.Bundle
 import androidx.activity.viewModels

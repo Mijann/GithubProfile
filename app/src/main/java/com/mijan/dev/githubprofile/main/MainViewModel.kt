@@ -1,4 +1,4 @@
-package com.mijan.dev.githubprofile
+package com.mijan.dev.githubprofile.main
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ExperimentalPagingApi
