@@ -1,5 +1,7 @@
 package com.mijan.dev.githubprofile.di
 
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import com.mijan.dev.githubprofile.BuildConfig
 import com.mijan.dev.githubprofile.Constants
 import com.mijan.dev.githubprofile.data.remote.api.GithubApi
@@ -42,4 +44,12 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideGithubApi(retrofit: Retrofit): GithubApi = retrofit.create(GithubApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideNetworkRequest(): NetworkRequest = NetworkRequest.Builder()
+        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+        .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+        .build()
 }
