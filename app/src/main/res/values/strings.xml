@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Github Profile</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="name">Name</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="company">Company</string>
+    <string name="blog">Blog</string>
+    <string name="notes">Notes</string>
+    <string name="save">Save</string>
+    <string name="network_error_no_connection">No internet connection. Please check your network connection.</string>
+    <string name="network_connection_restored">Internet connection has been restored.</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="no_data">No data</string>
+    <string name="search_no_user_found">No user found. Please try another keyword.</string>
+    <string name="search">Search</string>
 </resources>

@@ -1,60 +1,101 @@
 package com.mijan.dev.githubprofile.main
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mijan.dev.githubprofile.R
-import com.mijan.dev.githubprofile.data.local.entity.UserEntity
+import com.mijan.dev.githubprofile.data.model.UsersPagingDataPresentationModel
+import com.mijan.dev.githubprofile.databinding.LayoutEmptyBinding
+import com.mijan.dev.githubprofile.databinding.LayoutNoNetworkBinding
 import com.mijan.dev.githubprofile.databinding.LayoutUserItemBinding
-import com.mijan.dev.githubprofile.utils.loadImageUrl
+import com.mijan.dev.githubprofile.main.viewholder.EmptyViewHolder
+import com.mijan.dev.githubprofile.main.viewholder.NoNetworkViewHolder
+import com.mijan.dev.githubprofile.main.viewholder.UserEntityViewHolder
 
-class UsersPagingDataAdapter : PagingDataAdapter<UserEntity, UsersPagingDataAdapter.ViewHolder>(
+class UsersPagingDataAdapter(
+    private val onItemClick: (username: String) -> Unit
+) : PagingDataAdapter<UsersPagingDataPresentationModel, UsersPagingDataAdapter.BaseUsersPagingDataViewHolder>(
     DiffCallback()
 ) {
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        getItem(position)?.let {
-            val isFourthItem = position != 0 && position % 4 == 0
-            holder.bind(it, isFourthItem)
+
+    override fun onBindViewHolder(holder: BaseUsersPagingDataViewHolder, position: Int) {
+        when (holder) {
+            is UserEntityViewHolder -> {
+                getItem(position)?.let {
+                    holder.bind(it, position, onItemClick)
+                }
+            }
+            else -> getItem(position)?.let { holder.bind(it) }
         }
     }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewHolder {
-        return ViewHolder(
-            LayoutUserItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+    ): BaseUsersPagingDataViewHolder {
+        return when (viewType) {
+            0 -> UserEntityViewHolder(
+                LayoutUserItemBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
             )
-        )
+            1 -> NoNetworkViewHolder(
+                LayoutNoNetworkBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+            else -> EmptyViewHolder(
+                LayoutEmptyBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            )
+        }
     }
 
-    class ViewHolder(private val binding: LayoutUserItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: UserEntity, shouldInvertImage: Boolean) {
-            with(binding) {
-                imageAvatar.loadImageUrl(
-                    url = user.avatarUrl,
-                    shouldInvert = shouldInvertImage,
-                    placeHolderResId = R.drawable.image_user_placeholder
-                )
-                textUsername.text = user.username
-                textDetails.text = user.url
+    override fun getItemViewType(position: Int): Int {
+        getItem(position)?.let { presentationModel ->
+            when (presentationModel) {
+                is UsersPagingDataPresentationModel.UserEntityPresentationModel -> return 0
+                is UsersPagingDataPresentationModel.NoNetworkPresentationModel -> return 1
+                else -> return 2
             }
         }
+        return 2
+    }
+
+    abstract class BaseUsersPagingDataViewHolder(
+        itemView: View,
+        position: Int? = null,
+        onItemClick: ((username: String) -> Unit)? = null
+    ) : RecyclerView.ViewHolder(itemView) {
+        abstract fun bind(
+            item: UsersPagingDataPresentationModel,
+            position: Int? = null,
+            onItemClick: ((username: String) -> Unit)? = null
+        )
     }
 }
 
-class DiffCallback : DiffUtil.ItemCallback<UserEntity>() {
-    override fun areItemsTheSame(oldItem: UserEntity, newItem: UserEntity): Boolean {
-        return oldItem.id == newItem.id
+class DiffCallback : DiffUtil.ItemCallback<UsersPagingDataPresentationModel>() {
+    override fun areItemsTheSame(
+        oldItem: UsersPagingDataPresentationModel,
+        newItem: UsersPagingDataPresentationModel
+    ): Boolean {
+        return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: UserEntity, newItem: UserEntity): Boolean {
+    override fun areContentsTheSame(
+        oldItem: UsersPagingDataPresentationModel,
+        newItem: UsersPagingDataPresentationModel
+    ): Boolean {
         return oldItem == newItem
     }
 }
